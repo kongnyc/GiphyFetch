@@ -7,15 +7,37 @@ document.addEventListener("DOMContentLoaded", () => {
     let content=document.querySelector(".content");
     let h1=document.createElement("h1")
     let limit=10;
-    let search="bigs"
-    form.addEventListener("submit",()=>{
-        giphySearch(search,limit)
+    let search="cats"
+    // let data;
+
+    form.addEventListener("submit",(event)=>{
+        event.preventDefault();
+        search=input.value;
+        h1.innerText=`${limit} gifs of ${input.value}`
+        // h1=input.value
+        giphySearch(search,limit);
     })
+
+    select.addEventListener("change",(event)=>{
+        limit=event.target.value
+        // console.log(limit)
+    })
+
+  const showGif= (arrImg)=>{
+    content.innerHTML="";
+    content.appendChild(h1);
+    arrImg.forEach(el=>{
+        let img=document.createElement("img")
+        img.src=el.images.downsized_medium.url
+        content.appendChild(img)
+    })
+  }
 
     const giphySearch=async(userInput,userLimit)=>{
         try{
             let fetch = await axios.get(`https://api.giphy.com/v1/gifs/search?api_key=${key}&q=${userInput}&limit=${userLimit}`)
-            console.log(fetch)
+            // debugger;
+            showGif(fetch.data.data)
         }catch(err){
             debugger
         }
